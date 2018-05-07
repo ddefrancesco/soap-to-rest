@@ -50,8 +50,8 @@ script:
 - ballerina version
 
 # Initialize the Ballerina project
-- ballerina build 
+- ballerina build soaprest
 
-- ballerina test
+- ballerina test soaprest
 
 
