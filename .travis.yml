@@ -47,7 +47,7 @@ script:
 - ballerina version
 
 # Initialize the Ballerina project
-- ballerina build soap.bal
+- ballerina build 
 
 - ballerina test
 
