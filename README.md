@@ -1,3 +1,3 @@
 # soap-to-rest
 
-A simple example of SOAP to REST with (Ballerina) [http://ballerina.io]
+A simple example of SOAP to REST with [Ballerina] (http://ballerina.io)
