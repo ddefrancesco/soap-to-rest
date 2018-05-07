@@ -12,6 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sudo: required
+
+services:
+  - docker
+  
+before_install:
+- docker pull pizak/pay
+- docker run -d -p 127.0.0.1:8888:8080 pay/docker
+
+env:
+- SOAP_ENDPOINT=http://localhost:8888
+
 script:
 # Declare STRING variable
 - STRING="Downloading ballerina..."
@@ -36,5 +48,7 @@ script:
 
 # Initialize the Ballerina project
 - ballerina build soap.bal
+
+- ballerina test
 
 
