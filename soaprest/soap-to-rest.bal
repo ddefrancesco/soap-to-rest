@@ -17,12 +17,14 @@ service<http:Service> soaprest bind listener {
         path: "/",
         consumes: ["application/json"],
         produces: ["application/json"],
-        body: "js"
+        body: "authoriseRequest"
     }
-    newResource (endpoint caller, http:Request request, json js) {
-        Authorise a = check <Authorise>js;
+    newResource (endpoint caller, 
+            http:Request request, 
+            Authorise authoriseRequest) {
+
         http:Request req;
-        req.setPayload(getXML(a));
+        req.setPayload(getXML(authoriseRequest));
         req.setHeader("soapAction", "http://freo.me/payment/authorise");
         http:Response soapRes =  check soapService->post("/pay/services/paymentSOAP",  request = req);
         xml result = check soapRes.getXmlPayload();
@@ -50,7 +52,7 @@ type AuthoriseResponse {
     boolean success;
     string authCode;
     string reference;
-    string refusalReason = "";
+    string refusalReason;
 };
 
 function getXML(Authorise a) returns xml {
@@ -84,6 +86,7 @@ function getJSON(xml x) returns AuthoriseResponse {
     }
     else {
         ar.success = true;
+        ar.refusalReason = "";
     }
     
     ar.authCode = check <string>j.authcode;
