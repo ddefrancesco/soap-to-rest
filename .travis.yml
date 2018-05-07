@@ -21,6 +21,9 @@ before_install:
 - docker pull pizak/pay
 - docker run -d -p 127.0.0.1:8888:8080 pizak/pay
 
+after_failure:
+  - cat ballerina-internal.log
+
 env:
 - SOAP_ENDPOINT=http://localhost:8888
 
