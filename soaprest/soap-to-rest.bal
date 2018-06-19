@@ -4,7 +4,9 @@ import ballerina/system;
 
 endpoint http:Listener listener {
     port:9090
+    
 };
+
 endpoint http:Client soapService {
     url: system:getEnv("SOAP_ENDPOINT")
 };
@@ -28,10 +30,10 @@ service<http:Service> soaprest bind listener {
         req.setHeader("soapAction", "http://freo.me/payment/authorise");
         http:Response soapRes =  check soapService->post("/pay/services/paymentSOAP",  request = req);
         xml result = check soapRes.getXmlPayload();
-        AuthoriseResponse ar = getJSON(result);
+        AuthoriseResponse ar = getAuthoriseResponse(result);
         json j = check <json>ar;
         http:Response response;
-        response.setJsonPayload(j);
+        response.setPayload(j);
         _ = caller -> respond(response);
     }
 }
@@ -77,8 +79,9 @@ function getXML(Authorise a) returns xml {
     return soapBody;
 }
 
-function getJSON(xml x) returns AuthoriseResponse {
-    json j = x.toJSON({preserveNamespaces:false}).Envelope.Body.authoriseResponse;
+function getAuthoriseResponse(xml x) returns AuthoriseResponse {
+    json j = x.toJSON({preserveNamespaces:false}).
+        Envelope.Body.authoriseResponse;
     AuthoriseResponse ar;
     if ((check <string>j.resultcode) != "0") {
         ar.success = false;
